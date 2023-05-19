@@ -1,0 +1,173 @@
+#!/bin/bash
+
+##############
+# pacrepoman #
+##############
+#
+# pacman repository manager
+# pacrepoman is a cli tool for Arch Linux to manage repositories in the Pacman configuration file usable within scripts without relying on user interaction required by text editors.
+#
+# MIT License
+# Copyright (c) 2023. Yannick Brouard & BROuard SOLutions. All rights reserved.
+#
+# https://github.com/yckbrd/pacrepoman
+#
+#############
+# CHANGELOG #
+#############
+#
+# v0.1.0   Initial release
+#
+#############
+
+conff=/etc/pacman.conf
+option=$1
+name=$2
+location=$3
+trustlvl=$4
+
+help_show()
+{
+cat <<__EOF__
+pacrepoman
+v0.1.0
+
+pacman repository manager
+pacrepoman is a cli tool for Arch Linux to manage repositories in the Pacman configuration file usable within scripts without relying on user interaction required by text editors.
+
+Usage: pacrepoman [option] <name> <url OR path> <siglevel>
+   -h --help                                  Display this help.
+   -l --list                                  List all repositories in "$conff".
+   -q --query <name>                          Query repository <name> in "$conff".
+   -a --add <name> <url OR path> <siglevel>   Add repository <name> and location, server <url> or mirrorlist <path>, to "$conff".
+                                              Specifying trust level <siglevel> is optional.
+   -r --remove <name>                         Remove repository <name> from "$conff".
+   -e --enable <name>                         --- NOT YET IMPLEMENTED --- Enable (uncomment) repository <name> in "$conff".
+   -d --disable <name>                        --- NOT YET IMPLEMENTED --- Disable (comment) repository <name> in "$conff".
+__EOF__
+}
+
+write_permission_check()
+{
+if [ -w "$conff" ]
+then
+echo "$conff exists and write permission granted."
+else
+echo "$conff not found or write permission denied."
+echo "Please verify path and/or execute pacrepoman with root privileges."
+exit
+fi
+}
+
+repo_list()
+{
+sed -E "/^\[|^\#\[/! d" $conff | sed "/\[options\]/ d" | sed "/\#\[custom\]/ d" | sed "s/\[//" | sed "s/\]//"
+}
+
+repo_query()
+{
+awk "/\\[$name\\]/,/^$/" $conff | awk "!/^$/"
+}
+
+repo_query_result="$(repo_query)"
+
+repo_check()
+{
+if [ "$repo_query_result" != '' ]
+then
+echo "Repository '$name' already present in $conff."
+exit
+else
+echo "Repository '$name' not found in $conff."
+fi
+}
+
+repo_add()
+{
+echo >> $conff
+echo "[$name]" >> $conff
+if [ $trustlvl != '' ]
+then
+echo "SigLevel = $trustlvl" >> $conff
+fi
+if [[ $location == .* ]] || [[ $location == /* ]] || [[ $location == file://* ]]
+then
+echo "Include = $location" >> $conff
+else
+echo "Server = $location" >> $conff
+fi
+}
+
+repo_add_echo()
+{
+repo_query
+echo "...has been added to $conff"
+}
+
+repo_remove()
+{
+conf=$(<"$conff")
+echo "${conf/"$repo_query_result"}" > $conff
+echo "Repository '$name' has been removed from $conff."
+}
+
+not_yet_implemented()
+{
+echo "Apologies, but unfortunately this option has not been implemented yet!"
+}
+
+repo_enable()
+{
+not_yet_implemented
+}
+
+repo_disable()
+{
+not_yet_implemented
+}
+
+case $1 in
+
+-w|--write-permission)
+write_permission_check
+;;
+
+-l|--list)
+repo_list
+;;
+
+-q|--query)
+repo_query
+;;
+
+-c|--check)
+repo_check
+;;
+
+-a|--add)
+write_permission_check
+repo_check
+repo_add
+repo_add_echo
+;;
+
+-r|--remove)
+write_permission_check
+repo_remove
+;;
+
+-e|--enable)
+write_permission_check
+repo_enable
+;;
+
+-d|--disable)
+write_permission_check
+repo_disable
+;;
+
+-h|--help|*)
+help_show
+;;
+
+esac
