@@ -13,5 +13,5 @@ pacrepoman is a cli tool for Arch Linux to manage repositories in the Pacman con
 -d --disable <name>                        --- NOT YET IMPLEMENTED --- Disable (comment) repository <name> in /etc/pacman.conf.
 ```
 ## Changelog
-### v0.1.0
+### 0.1.0
 - Initial release
