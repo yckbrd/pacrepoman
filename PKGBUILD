@@ -21,7 +21,7 @@ depends=('bash' 'coreutils' 'sed' 'awk')
 #changelog=
 source=("$pkgname-$pkgver.tar.gz::https://github.com/yckbrd/pacrepoman/archive/${pkgver}.tar.gz")
 #noextract=()
-#md5sums=("fd73e1dd493160bbda6c7d7943bf0374")
+md5sums=("fd73e1dd493160bbda6c7d7943bf0374")
 #validpgpkeys=()
 
 package()
