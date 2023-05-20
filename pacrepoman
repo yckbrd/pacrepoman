@@ -16,7 +16,7 @@
 # CHANGELOG #
 #############
 #
-# v0.1.0   Initial release
+# 0.1.0   - Initial release
 #
 #############
 
@@ -30,7 +30,7 @@ help_show()
 {
 cat <<__EOF__
 pacrepoman
-v0.1.0
+0.1.0
 
 pacman repository manager
 pacrepoman is a cli tool for Arch Linux to manage repositories in the Pacman configuration file usable within scripts without relying on user interaction required by text editors.
