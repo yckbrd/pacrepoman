@@ -1,12 +1,12 @@
-# Maintainer: Yannick Brouard <github@brouard.solutions>
+# Maintainer: Yannick Brouard <yckbrd+github@outlook.com>
 pkgname=pacrepoman
-pkgver=0.1.0
-pkgrel=1
+pkgver=0.1.0.20241102
+pkgrel=2
 #epoch=
 pkgdesc="CLI Pacman repository manager"
 arch=('any')
 url="https://github.com/yckbrd/pacrepoman"
-license=('MIT')
+license=('GNU LGPLv2.1')
 #groups=()
 depends=('bash' 'coreutils' 'sed' 'awk')
 #makedepends=()
@@ -21,7 +21,7 @@ depends=('bash' 'coreutils' 'sed' 'awk')
 #changelog=
 source=("$pkgname-$pkgver.tar.gz::https://github.com/yckbrd/pacrepoman/archive/${pkgver}.tar.gz")
 #noextract=()
-md5sums=("fd73e1dd493160bbda6c7d7943bf0374")
+#md5sums=()
 #validpgpkeys=()
 
 package()
